@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BMI Calculator (Feet & Inches + Age)</title>
+<title>BMI Calculator with Birthday</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -22,10 +22,10 @@
     text-align: center;
   }
 
-  input[type="number"] {
+  input[type="number"], input[type="date"] {
     padding: 10px;
     margin: 5px;
-    width: 80px;
+    width: 120px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -82,10 +82,8 @@
   </div>
 
   <div>
-    <label>Age:</label>
-    <input type="number" id="years" placeholder="Years">
-    <input type="number" id="months" placeholder="Months">
-    <input type="number" id="days" placeholder="Days">
+    <label>Birthday:</label>
+    <input type="date" id="birthday">
   </div>
 
   <button onclick="calculateBMI()">Calculate</button>
@@ -101,18 +99,68 @@ function calculateBMI() {
   const weight = parseFloat(document.getElementById('weight').value);
   const feet = parseFloat(document.getElementById('feet').value);
   const inches = parseFloat(document.getElementById('inches').value);
-  const years = parseInt(document.getElementById('years').value) || 0;
-  const months = parseInt(document.getElementById('months').value) || 0;
-  const days = parseInt(document.getElementById('days').value) || 0;
+  const birthdayInput = document.getElementById('birthday').value;
 
-  if(!weight || !feet || inches < 0) {
-    alert('Please enter valid numbers for height and weight.');
+  if(!weight || !feet || inches < 0 || !birthdayInput) {
+    alert('Please enter valid height, weight, and birthday.');
     return;
   }
 
-  // Height in meters
+  // Convert feet + inches to meters
   const heightMeters = ((feet * 12) + inches) * 0.0254;
   const bmi = weight / (heightMeters * heightMeters);
+  const bmiRounded = bmi.toFixed(1);
+
+  // Calculate age
+  const today = new Date();
+  const birthDate = new Date(birthdayInput);
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if(days < 0) {
+    months -= 1;
+    days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+  }
+
+  if(months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  const ageStr = `${years} years, ${months} months, ${days} days`;
+
+  // Determine BMI status
+  const statusEl = document.getElementById('status');
+  let status = '';
+  let advice = '';
+  let color = '';
+
+  if(bmi < 18.5) {
+    status = 'Underweight';
+    advice = 'You should eat nutritious food to gain healthy weight.';
+    color = '#3498db'; // Blue
+  } else if(bmi >= 18.5 && bmi < 25) {
+    status = 'Normal weight';
+    advice = 'Great! Maintain your current weight and healthy lifestyle.';
+    color = '#2ecc71'; // Green
+  } else if(bmi >= 25 && bmi < 30) {
+    status = 'Overweight';
+    advice = 'You are overweight. Consider controlling your diet and exercising.';
+    color = '#e67e22'; // Orange
+  } else {
+    status = 'Obese';
+    advice = 'You are obese. Seek medical advice and follow a healthy diet and exercise plan.';
+    color = '#e74c3c'; // Red
+  }
+
+  statusEl.innerText = `Age: ${ageStr}\nBMI: ${bmiRounded} (${advice})`;
+  statusEl.style.color = color;
+}
+</script>
+
+</body>
+</html>  const bmi = weight / (heightMeters * heightMeters);
   const bmiRounded = bmi.toFixed(1);
 
   const statusEl = document.getElementById('status');
