@@ -94,7 +94,7 @@ button {
 
   <!-- Premium Developer Text -->
   <div class="developer">
-    Developed by <span>Snk Tech Arman</span> • 4SigBn
+    Developed by <span>Snk Technician Arman</span> • 4SigBn
   </div>
 </div>
 
