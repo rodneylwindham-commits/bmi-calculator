@@ -7,52 +7,60 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f0f0f0;
+  padding: 20px;
+  background-color: #f0f0f0;
 }
 
 .calculator {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
   text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 input {
-  padding: 8px;
-  margin: 5px;
-  width: 100px;
+  padding: 12px;
+  margin: 6px;
+  width: 45%;
+  font-size: 16px;
 }
 
 button {
-  padding: 10px;
-  margin-top: 10px;
-  background: blue;
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
   color: white;
   border: none;
+  margin-top: 10px;
   cursor: pointer;
 }
 
 #status {
-  margin-top: 15px;
+  margin-top: 20px;
+  font-size: 18px;
   font-weight: bold;
+  white-space: pre-line;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="calculator">
   <h2>BMI Calculator</h2>
 
-  <input type="number" id="feet" placeholder="Feet"><br>
+  <input type="number" id="feet" placeholder="Feet">
   <input type="number" id="inches" placeholder="Inches"><br>
+
   <input type="number" id="weight" placeholder="Weight (kg)"><br>
+
   <input type="text" id="birthday" placeholder="DD/MM/YYYY"><br>
 
   <button onclick="calculateBMI()">Calculate</button>
@@ -62,32 +70,84 @@ button {
 
 <script>
 function calculateBMI() {
-  const weight = parseFloat(document.getElementById("weight").value);
-  const feet = parseFloat(document.getElementById("feet").value);
-  const inches = parseFloat(document.getElementById("inches").value);
-  const birthday = document.getElementById("birthday").value;
+  const weight = parseFloat(document.getElementById('weight').value);
+  const feet = parseFloat(document.getElementById('feet').value);
+  const inches = parseFloat(document.getElementById('inches').value);
+  const birthdayInput = document.getElementById('birthday').value.trim();
 
-  if (!weight || !feet || !birthday) {
-    alert("Fill all fields!");
+  if(!weight || !feet || inches < 0 || !birthdayInput) {
+    alert('Please enter valid data.');
     return;
   }
 
-  // Height convert
-  const height = ((feet * 12) + (inches || 0)) * 0.0254;
+  // বয়স হিসাব
+  const parts = birthdayInput.split('/');
+  if(parts.length !== 3) {
+    alert('Use DD/MM/YYYY format');
+    return;
+  }
+
+  const day = parseInt(parts[0]);
+  const month = parseInt(parts[1]) - 1;
+  const year = parseInt(parts[2]);
+
+  const birthDate = new Date(year, month, day);
+  if(isNaN(birthDate.getTime())) {
+    alert('Invalid date');
+    return;
+  }
+
+  const today = new Date();
+  let years = today.getFullYear() - year;
+  let months = today.getMonth() - month;
+  let days = today.getDate() - day;
+
+  if(days < 0){
+    months--;
+    days += 30;
+  }
+
+  if(months < 0){
+    years--;
+    months += 12;
+  }
+
+  const ageStr = years + " years, " + months + " months";
+
+  // Height → meter
+  const heightMeters = ((feet * 12) + inches) * 0.0254;
 
   // BMI
-  const bmi = weight / (height * height);
-  const result = bmi.toFixed(1);
+  const bmi = weight / (heightMeters * heightMeters);
+  const bmiRounded = bmi.toFixed(1);
 
   let status = "";
+  let advice = "";
+  let color = "";
 
-  if (bmi < 18.5) status = "Underweight";
-  else if (bmi < 25) status = "Normal";
-  else if (bmi < 30) status = "Overweight";
-  else status = "Obese";
+  if (bmi < 18.5) {
+    status = "Underweight";
+    advice = "You should eat nutritious food to gain healthy weight.";
+    color = "#3498db";
+  } else if (bmi <= 25) {
+    status = "Normal weight";
+    advice = "Maintain your current weight and healthy lifestyle.";
+    color = "#2ecc71";
+  } else if (bmi < 30) {
+    status = "Overweight";
+    advice = "You are overweight. Consider controlling your diet and exercising.";
+    color = "#e67e22";
+  } else {
+    status = "Obese";
+    advice = "You are obese. Seek medical advice and follow a healthy diet plan.";
+    color = "#e74c3c";
+  }
 
-  document.getElementById("status").innerText =
-    "BMI: " + result + " (" + status + ")";
+  const statusEl = document.getElementById('status');
+  statusEl.innerText =
+    "Age: " + ageStr + "\nBMI: " + bmiRounded + " (" + status + ")\n" + advice;
+
+  statusEl.style.color = color;
 }
 </script>
 
