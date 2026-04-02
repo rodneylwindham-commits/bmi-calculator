@@ -114,6 +114,10 @@ function calculateBMI() {
         document.getElementById("result").style.backgroundColor = color;
     }
 }
+    <!-- Title with green text and black border -->
+<h2 style="color: #4CAF50; border: 2px solid black; padding: 10px; text-align:center; border-radius:8px;">
+    BMI SMART CALCULATOR
+</h2>
 </script>
 
 </body>
