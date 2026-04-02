@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -70,7 +70,7 @@ function calculateBMI() {
     // Calculate age from manual DOB input
     let birthDateParts = dobInput.split("-");
     if(birthDateParts.length !== 3){
-        document.getElementById("result").innerHTML = "Invalid DOB format. Use YYYY-MM-DD";
+        document.getElementById("result").innerHTML = "Invalid DOB format. Use DD-MM-YYYY";
         document.getElementById("result").style.backgroundColor = "#555";
         return;
     }
