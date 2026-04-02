@@ -3,37 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BMI Calculator</title>
+<title>BMI Smart Calculator</title>
 <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-    .calculator { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; }
-    input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
-    button { width: 100%; padding: 10px; background: #0077cc; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .calculator { max-width: 450px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 20px; }
     button:hover { background: #005fa3; }
-    .result { margin-top: 20px; padding: 10px; background: #e3f2fd; border-radius: 5px; text-align: center; font-weight: bold; }
+    .result { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; line-height: 1.5; color: #fff; }
     .footer { text-align: center; margin-top: 30px; color: #555; font-size: 14px; font-style: italic; }
 </style>
 </head>
 <body>
 
 <div class="calculator">
-    <h2>BMI Calculator</h2>
+    <h2>BMI Smart Calculator</h2>
     
-    <label>Weight (kg)</label>
-    <input type="number" id="weight" placeholder="e.g., 30">
-    
-    <label>Height (meters)</label>
-    <input type="number" step="0.01" id="height" placeholder="e.g., 1.2">
-    
-    <label>Age (years)</label>
-    <input type="number" id="age" placeholder="e.g., 10">
+    <label>Date of Birth</label>
+    <input type="date" id="dob">
     
     <label>Gender</label>
     <select id="gender">
         <option value="male">Male</option>
         <option value="female">Female</option>
     </select>
+
+    <label>Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g., 30">
+
+    <label>Height</label>
+    <div style="display:flex; gap:10px;">
+        <input type="number" id="heightFeet" placeholder="Feet" style="flex:1;">
+        <input type="number" id="heightInch" placeholder="Inches" style="flex:1;">
+    </div>
     
     <button onclick="calculateBMI()">Calculate BMI</button>
     
@@ -46,66 +50,65 @@
 
 <script>
 function calculateBMI() {
-    let weight = parseFloat(document.getElementById("weight").value);
-    let height = parseFloat(document.getElementById("height").value);
-    let age = parseInt(document.getElementById("age").value);
+    let dob = document.getElementById("dob").value;
     let gender = document.getElementById("gender").value;
-    
-    if(!weight || !height || !age){
-        document.getElementById("result").innerText = "Please fill all fields.";
+    let weight = parseFloat(document.getElementById("weight").value);
+    let heightFeet = parseFloat(document.getElementById("heightFeet").value);
+    let heightInch = parseFloat(document.getElementById("heightInch").value);
+
+    if(!dob || !weight || !heightFeet || !heightInch){
+        document.getElementById("result").innerHTML = "Please fill all fields.";
+        document.getElementById("result").style.backgroundColor = "#555";
         return;
     }
-    
-    let bmi = weight / (height * height);
+
+    // Calculate age
+    let birthDate = new Date(dob);
+    let today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
+
+    // Convert height to meters
+    let heightMeters = (heightFeet * 12 + heightInch) * 0.0254;
+
+    // BMI calculation
+    let bmi = weight / (heightMeters * heightMeters);
     bmi = Math.round(bmi * 100) / 100;
-    
+
     let category = "";
+    let advice = "";
+    let color = "";
 
     if(age >= 18){
-        // Adults BMI
-        if(bmi < 18.5) category = "Underweight";
-        else if(bmi < 24.9) category = "Normal weight";
-        else if(bmi < 29.9) category = "Overweight";
-        else category = "Obese";
-        document.getElementById("result").innerText = `BMI: ${bmi} - ${category}`;
+        // Adults
+        if(bmi < 18.5) { category="Underweight"; advice="Eat nutritious foods, gain weight gradually."; color="#2196F3"; }
+        else if(bmi < 24.9) { category="Normal weight"; advice="Maintain a balanced diet and regular exercise."; color="#4CAF50"; }
+        else if(bmi < 29.9) { category="Overweight"; advice="Exercise regularly and control diet."; color="#FF5722"; }
+        else { category="Obese"; advice="Consult a doctor, follow diet and exercise plan."; color="#F44336"; }
+        document.getElementById("result").innerHTML = `Age: ${age} years<br>BMI: ${bmi} - ${category}<br>${advice}`;
+        document.getElementById("result").style.backgroundColor = color;
     } else {
-        // Children simplified percentile approximation
-        let percentile = 0;
-
+        // Children approximation
         if(gender === "male"){
-            if(bmi < 14) percentile = "<5% (Underweight)";
-            else if(bmi < 18) percentile = "5-85% (Normal)";
-            else if(bmi < 20) percentile = "85-95% (Overweight)";
-            else percentile = ">95% (Obese)";
+            if(bmi < 14) { category="<5% (Underweight)"; advice="Ensure balanced diet, monitor growth."; color="#2196F3"; }
+            else if(bmi < 18) { category="5-85% (Normal)"; advice="Encourage active play and healthy meals."; color="#4CAF50"; }
+            else if(bmi < 20) { category="85-95% (Overweight)"; advice="Limit sugary foods, encourage physical activity."; color="#FF5722"; }
+            else { category=">95% (Obese)"; advice="Consult pediatrician for guidance."; color="#F44336"; }
         } else {
-            if(bmi < 13.5) percentile = "<5% (Underweight)";
-            else if(bmi < 17.5) percentile = "5-85% (Normal)";
-            else if(bmi < 19.5) percentile = "85-95% (Overweight)";
-            else percentile = ">95% (Obese)";
+            if(bmi < 13.5) { category="<5% (Underweight)"; advice="Ensure balanced diet, monitor growth."; color="#2196F3"; }
+            else if(bmi < 17.5) { category="5-85% (Normal)"; advice="Encourage active play and healthy meals."; color="#4CAF50"; }
+            else if(bmi < 19.5) { category="85-95% (Overweight)"; advice="Limit sugary foods, encourage physical activity."; color="#FF5722"; }
+            else { category=">95% (Obese)"; advice="Consult pediatrician for guidance."; color="#F44336"; }
         }
-
-        document.getElementById("result").innerText = `BMI: ${bmi} - Children: ${percentile}`;
+        document.getElementById("result").innerHTML = `Age: ${age} years<br>BMI: ${bmi} - Children: ${category}<br>${advice}`;
+        document.getElementById("result").style.backgroundColor = color;
     }
 }
 </script>
 
 </body>
-</html>  const heightMeters = ((feet * 12) + inches) * 0.0254;
-
-  const bmi = weight / (heightMeters * heightMeters);
-  const bmiRounded = bmi.toFixed(1);
-
-  let status = "";
-  let advice = "";
-  let color = "";
-
-  if (bmi < 18.5) {
-    status = "Underweight";
-    advice = "Oh Shit! You should eat nutritious food to gain healthy weight.";
-    color = "#3498db";
-  } else if (bmi <= 25) {
-    status = "Normal weight";
-    advice = "Excellent! Maintain your current weight and healthy lifestyle.";
+</html>    advice = "Excellent! Maintain your current weight and healthy lifestyle.";
     color = "#2ecc71";
   } else if (bmi < 30) {
     status = "Overweight";
