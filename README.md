@@ -13,7 +13,8 @@
     button { width: 100%; padding: 12px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 20px; }
     button:hover { background: #005fa3; }
     .result { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; line-height: 1.5; color: #fff; }
-    .footer { text-align: center; margin-top: 30px; color: #555; font-size: 14px; font-style: italic; }
+    .footer { text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold; }
+    .footer span { font-family: 'Arial', sans-serif; }
 </style>
 </head>
 <body>
@@ -21,8 +22,8 @@
 <div class="calculator">
     <h2>BMI Smart Calculator</h2>
     
-    <label>Date of Birth</label>
-    <input type="date" id="dob">
+    <label>Date of Birth (YYYY-MM-DD)</label>
+    <input type="text" id="dob" placeholder="e.g., 2015-06-20">
     
     <label>Gender</label>
     <select id="gender">
@@ -45,25 +46,35 @@
 </div>
 
 <div class="footer">
-    Developed by SNK Technician Arman (4SigBn)
+    <span style="color:#FF5733">Developed</span> 
+    <span style="color:#33FF57">by</span> 
+    <span style="color:#3357FF">SNK Technician</span> 
+    <span style="color:#FF33A1">Arman</span> 
+    <span style="color:#FFC300">(4SigBn)</span>
 </div>
 
 <script>
 function calculateBMI() {
-    let dob = document.getElementById("dob").value;
+    let dobInput = document.getElementById("dob").value.trim();
     let gender = document.getElementById("gender").value;
     let weight = parseFloat(document.getElementById("weight").value);
     let heightFeet = parseFloat(document.getElementById("heightFeet").value);
     let heightInch = parseFloat(document.getElementById("heightInch").value);
 
-    if(!dob || !weight || !heightFeet || !heightInch){
+    if(!dobInput || !weight || !heightFeet || !heightInch){
         document.getElementById("result").innerHTML = "Please fill all fields.";
         document.getElementById("result").style.backgroundColor = "#555";
         return;
     }
 
-    // Calculate age
-    let birthDate = new Date(dob);
+    // Calculate age from manual DOB input
+    let birthDateParts = dobInput.split("-");
+    if(birthDateParts.length !== 3){
+        document.getElementById("result").innerHTML = "Invalid DOB format. Use YYYY-MM-DD";
+        document.getElementById("result").style.backgroundColor = "#555";
+        return;
+    }
+    let birthDate = new Date(birthDateParts[0], birthDateParts[1]-1, birthDateParts[2]);
     let today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     let m = today.getMonth() - birthDate.getMonth();
@@ -81,7 +92,6 @@ function calculateBMI() {
     let color = "";
 
     if(age >= 18){
-        // Adults
         if(bmi < 18.5) { category="Underweight"; advice="Eat nutritious foods, gain weight gradually."; color="#2196F3"; }
         else if(bmi < 24.9) { category="Normal weight"; advice="Maintain a balanced diet and regular exercise."; color="#4CAF50"; }
         else if(bmi < 29.9) { category="Overweight"; advice="Exercise regularly and control diet."; color="#FF5722"; }
@@ -89,7 +99,6 @@ function calculateBMI() {
         document.getElementById("result").innerHTML = `Age: ${age} years<br>BMI: ${bmi} - ${category}<br>${advice}`;
         document.getElementById("result").style.backgroundColor = color;
     } else {
-        // Children approximation
         if(gender === "male"){
             if(bmi < 14) { category="<5% (Underweight)"; advice="Ensure balanced diet, monitor growth."; color="#2196F3"; }
             else if(bmi < 18) { category="5-85% (Normal)"; advice="Encourage active play and healthy meals."; color="#4CAF50"; }
@@ -104,27 +113,6 @@ function calculateBMI() {
         document.getElementById("result").innerHTML = `Age: ${age} years<br>BMI: ${bmi} - Children: ${category}<br>${advice}`;
         document.getElementById("result").style.backgroundColor = color;
     }
-}
-</script>
-
-</body>
-</html>    advice = "Excellent! Maintain your current weight and healthy lifestyle.";
-    color = "#2ecc71";
-  } else if (bmi < 30) {
-    status = "Overweight";
-    advice = "You are overweight. Consider controlling your diet and exercising.";
-    color = "#e67e22";
-  } else {
-    status = "Overweight";
-    advice = "You are overweight. Seek medical advice and follow a healthy diet plan.";
-    color = "#e74c3c";
-  }
-
-  const statusEl = document.getElementById('status');
-  statusEl.innerText =
-    "Age: " + ageStr + "\nBMI: " + bmiRounded + " (" + status + ")\n" + advice;
-
-  statusEl.style.color = color;
 }
 </script>
 
