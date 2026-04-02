@@ -1,83 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI Calculator</title>
+
+<style>
+body {
+  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f0f0;
+}
+
+.calculator {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+  width: 100px;
+}
+
+button {
+  padding: 10px;
+  margin-top: 10px;
+  background: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#status {
+  margin-top: 15px;
+  font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="calculator">
+  <h2>BMI Calculator</h2>
+
+  <input type="number" id="feet" placeholder="Feet"><br>
+  <input type="number" id="inches" placeholder="Inches"><br>
+  <input type="number" id="weight" placeholder="Weight (kg)"><br>
+  <input type="text" id="birthday" placeholder="DD/MM/YYYY"><br>
+
+  <button onclick="calculateBMI()">Calculate</button>
+
+  <div id="status"></div>
+</div>
+
 <script>
 function calculateBMI() {
-  const weight = parseFloat(document.getElementById('weight').value);
-  const feet = parseFloat(document.getElementById('feet').value);
-  const inches = parseFloat(document.getElementById('inches').value);
-  const birthdayInput = document.getElementById('birthday').value.trim();
+  const weight = parseFloat(document.getElementById("weight").value);
+  const feet = parseFloat(document.getElementById("feet").value);
+  const inches = parseFloat(document.getElementById("inches").value);
+  const birthday = document.getElementById("birthday").value;
 
-  if(!weight || !feet || inches < 0 || !birthdayInput) {
-    alert('Please enter valid height, weight, and birthday.');
+  if (!weight || !feet || !birthday) {
+    alert("Fill all fields!");
     return;
   }
 
-  // Parse DD/MM/YYYY
-  const parts = birthdayInput.split('/');
-  if(parts.length !== 3) {
-    alert('Please enter birthday in DD/MM/YYYY format.');
-    return;
-  }
-
-  const day = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10) - 1;
-  const year = parseInt(parts[2], 10);
-
-  const birthDate = new Date(year, month, day);
-
-  if(isNaN(birthDate.getTime())) {
-    alert('Invalid birth date.');
-    return;
-  }
-
-  // Age calculate
-  const today = new Date();
-  let years = today.getFullYear() - year;
-  let months = today.getMonth() - month;
-  let days = today.getDate() - day;
-
-  if(days < 0) {
-    months -= 1;
-    days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
-  }
-
-  if(months < 0) {
-    years -= 1;
-    months += 12;
-  }
-
-  const ageStr = `${years} years, ${months} months, ${days} days`;
-
-  // Height to meters
-  const heightMeters = ((feet * 12) + inches) * 0.0254;
+  // Height convert
+  const height = ((feet * 12) + (inches || 0)) * 0.0254;
 
   // BMI
-  const bmi = weight / (heightMeters * heightMeters);
-  const bmiRounded = bmi.toFixed(1);
+  const bmi = weight / (height * height);
+  const result = bmi.toFixed(1);
 
   let status = "";
-  let advice = "";
-  let color = "";
 
-  if (bmi < 18.5) {
-    status = "Underweight";
-    advice = "You should eat nutritious food.";
-    color = "#3498db";
-  } else if (bmi < 25) {
-    status = "Normal";
-    advice = "Maintain your current weight.";
-    color = "#2ecc71";
-  } else if (bmi < 30) {
-    status = "Overweight";
-    advice = "Consider exercise.";
-    color = "#e67e22";
-  } else {
-    status = "Obese";
-    advice = "Seek medical advice.";
-    color = "#e74c3c";
-  }
+  if (bmi < 18.5) status = "Underweight";
+  else if (bmi < 25) status = "Normal";
+  else if (bmi < 30) status = "Overweight";
+  else status = "Obese";
 
-  const statusEl = document.getElementById('status');
-  statusEl.innerText =
-    `Age: ${ageStr}\nBMI: ${bmiRounded} (${status})\n${advice}`;
-  statusEl.style.color = color;
+  document.getElementById("status").innerText =
+    "BMI: " + result + " (" + status + ")";
 }
 </script>
+
+</body>
+</html>
