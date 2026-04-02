@@ -4,146 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BMI Calculator</title>
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: #f0f0f0;
-}
-
-.calculator {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
-input {
-  padding: 12px;
-  margin: 6px;
-  width: 45%;
-  font-size: 16px;
-}
-
-button {
-  padding: 12px 20px;
-  font-size: 16px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-#status {
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  white-space: pre-line;
-}
-
-/* Premium Developer Text */
-.developer {
-  margin-top: 20px;
-  font-size: 13px;
-  color: #777;
-  letter-spacing: 0.5px;
-}
-
-.developer span {
-  font-weight: bold;
-  color: #007BFF;
-  position: relative;
-}
-
-.developer span::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #007BFF;
-  margin-top: 3px;
-  border-radius: 2px;
-  opacity: 0.6;
-}
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    .calculator { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #333; }
+    input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+    button { width: 100%; padding: 10px; background: #0077cc; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #005fa3; }
+    .result { margin-top: 20px; padding: 10px; background: #e3f2fd; border-radius: 5px; text-align: center; font-weight: bold; }
+    .footer { text-align: center; margin-top: 30px; color: #555; font-size: 14px; font-style: italic; }
 </style>
 </head>
-
 <body>
 
 <div class="calculator">
-  <h2>BMI Calculator</h2>
+    <h2>BMI Calculator</h2>
+    
+    <label>Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g., 30">
+    
+    <label>Height (meters)</label>
+    <input type="number" step="0.01" id="height" placeholder="e.g., 1.2">
+    
+    <label>Age (years)</label>
+    <input type="number" id="age" placeholder="e.g., 10">
+    
+    <label>Gender</label>
+    <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
+    
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    
+    <div class="result" id="result"></div>
+</div>
 
-  <input type="number" id="feet" placeholder="Feet">
-  <input type="number" id="inches" placeholder="Inches"><br>
-
-  <input type="number" id="weight" placeholder="Weight (kg)"><br>
-
-  <input type="text" id="birthday" placeholder="DD/MM/YYYY"><br>
-
-  <button onclick="calculateBMI()">Calculate</button>
-
-  <div id="status"></div>
-
-  <!-- Premium Developer Text -->
-  <div class="developer">
-    Developed by <span>Snk Technician Arman</span> • 4SigBn
-  </div>
+<div class="footer">
+    Developed by SNK Technician Arman (4SigBn)
 </div>
 
 <script>
 function calculateBMI() {
-  const weight = parseFloat(document.getElementById('weight').value);
-  const feet = parseFloat(document.getElementById('feet').value);
-  const inches = parseFloat(document.getElementById('inches').value);
-  const birthdayInput = document.getElementById('birthday').value.trim();
+    let weight = parseFloat(document.getElementById("weight").value);
+    let height = parseFloat(document.getElementById("height").value);
+    let age = parseInt(document.getElementById("age").value);
+    let gender = document.getElementById("gender").value;
+    
+    if(!weight || !height || !age){
+        document.getElementById("result").innerText = "Please fill all fields.";
+        return;
+    }
+    
+    let bmi = weight / (height * height);
+    bmi = Math.round(bmi * 100) / 100;
+    
+    let category = "";
 
-  if(!weight || !feet || inches < 0 || !birthdayInput) {
-    alert('Please enter valid data.');
-    return;
-  }
+    if(age >= 18){
+        // Adults BMI
+        if(bmi < 18.5) category = "Underweight";
+        else if(bmi < 24.9) category = "Normal weight";
+        else if(bmi < 29.9) category = "Overweight";
+        else category = "Obese";
+        document.getElementById("result").innerText = `BMI: ${bmi} - ${category}`;
+    } else {
+        // Children simplified percentile approximation
+        let percentile = 0;
 
-  const parts = birthdayInput.split('/');
-  if(parts.length !== 3) {
-    alert('Use DD/MM/YYYY format');
-    return;
-  }
+        if(gender === "male"){
+            if(bmi < 14) percentile = "<5% (Underweight)";
+            else if(bmi < 18) percentile = "5-85% (Normal)";
+            else if(bmi < 20) percentile = "85-95% (Overweight)";
+            else percentile = ">95% (Obese)";
+        } else {
+            if(bmi < 13.5) percentile = "<5% (Underweight)";
+            else if(bmi < 17.5) percentile = "5-85% (Normal)";
+            else if(bmi < 19.5) percentile = "85-95% (Overweight)";
+            else percentile = ">95% (Obese)";
+        }
 
-  const day = parseInt(parts[0]);
-  const month = parseInt(parts[1]) - 1;
-  const year = parseInt(parts[2]);
+        document.getElementById("result").innerText = `BMI: ${bmi} - Children: ${percentile}`;
+    }
+}
+</script>
 
-  const birthDate = new Date(year, month, day);
-  if(isNaN(birthDate.getTime())) {
-    alert('Invalid date');
-    return;
-  }
-
-  const today = new Date();
-  let years = today.getFullYear() - year;
-  let months = today.getMonth() - month;
-  let days = today.getDate() - day;
-
-  if(days < 0){
-    months--;
-    days += 30;
-  }
-
-  if(months < 0){
-    years--;
-    months += 12;
-  }
-
-  const ageStr = years + " years, " + months + " months";
-
-  const heightMeters = ((feet * 12) + inches) * 0.0254;
+</body>
+</html>  const heightMeters = ((feet * 12) + inches) * 0.0254;
 
   const bmi = weight / (heightMeters * heightMeters);
   const bmiRounded = bmi.toFixed(1);
