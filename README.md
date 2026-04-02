@@ -154,19 +154,19 @@ function calculateBMI() {
 
   if (bmi < 18.5) {
     status = "Underweight";
-    advice = "You should eat nutritious food to gain healthy weight.";
+    advice = "Oh Shit! You should eat nutritious food to gain healthy weight.";
     color = "#3498db";
   } else if (bmi <= 25) {
     status = "Normal weight";
-    advice = "Maintain your current weight and healthy lifestyle.";
+    advice = "Excellent! Maintain your current weight and healthy lifestyle.";
     color = "#2ecc71";
   } else if (bmi < 30) {
     status = "Overweight";
     advice = "You are overweight. Consider controlling your diet and exercising.";
     color = "#e67e22";
   } else {
-    status = "Obese";
-    advice = "You are obese. Seek medical advice and follow a healthy diet plan.";
+    status = "Overweight";
+    advice = "You are overweight. Seek medical advice and follow a healthy diet plan.";
     color = "#e74c3c";
   }
 
