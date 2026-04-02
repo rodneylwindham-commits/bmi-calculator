@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,23 +7,23 @@
 <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
     .calculator { max-width: 450px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    h2 { text-align: center; color: #4CAF50; border: 2px solid black; padding: 10px; border-radius: 8px; margin-bottom: 20px; }
     label { display: block; margin-top: 12px; font-weight: bold; }
     input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
     button { width: 100%; padding: 12px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 20px; }
     button:hover { background: #005fa3; }
     .result { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; line-height: 1.5; color: #fff; }
-    .footer { text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold; }
-    .footer span { font-family: 'Arial', sans-serif; }
+    .footer { text-align: center; margin-top: 30px; font-size: 16px; font-weight: bold; border: 2px solid black; padding: 10px; border-radius:8px; background-color: #FFD700; color: #000; }
 </style>
 </head>
 <body>
 
 <div class="calculator">
-    <h2>BMI Smart Calculator</h2>
+    <h2>BMI SMART CALCULATOR</h2>
     
-    <label>Date of Birth (YYYY-MM-DD)</label>
-    <input type="text" id="dob" placeholder="e.g., 2015-06-20">
+    <!-- DOB in DD/MM/YYYY format -->
+    <label>Date of Birth (DD/MM/YYYY)</label>
+    <input type="text" id="dob" placeholder="e.g., 20/06/2015" pattern="\d{2}/\d{2}/\d{4}" title="Enter date in DD/MM/YYYY format">
     
     <label>Gender</label>
     <select id="gender">
@@ -45,12 +45,9 @@
     <div class="result" id="result"></div>
 </div>
 
+<!-- Footer: light golden + black border -->
 <div class="footer">
-    <span style="color:#FF5733">Developed</span> 
-    <span style="color:#33FF57">by</span> 
-    <span style="color:#3357FF">SNK Technician</span> 
-    <span style="color:#FF33A1">Arman</span> 
-    <span style="color:#FFC300">(4SigBn)</span>
+    Developed by SNK Technician Arman (4SigBn)
 </div>
 
 <script>
@@ -67,14 +64,14 @@ function calculateBMI() {
         return;
     }
 
-    // Calculate age from manual DOB input
-    let birthDateParts = dobInput.split("-");
+    // Parse DOB DD/MM/YYYY
+    let birthDateParts = dobInput.split("/");
     if(birthDateParts.length !== 3){
-        document.getElementById("result").innerHTML = "Invalid DOB format. Use DD-MM-YYYY";
+        document.getElementById("result").innerHTML = "Invalid DOB format. Use DD/MM/YYYY";
         document.getElementById("result").style.backgroundColor = "#555";
         return;
     }
-    let birthDate = new Date(birthDateParts[0], birthDateParts[1]-1, birthDateParts[2]);
+    let birthDate = new Date(birthDateParts[2], birthDateParts[1]-1, birthDateParts[0]);
     let today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     let m = today.getMonth() - birthDate.getMonth();
@@ -114,10 +111,6 @@ function calculateBMI() {
         document.getElementById("result").style.backgroundColor = color;
     }
 }
-    <!-- Title with green text and black border -->
-<h2 style="color: #4CAF50; border: 2px solid black; padding: 10px; text-align:center; border-radius:8px;">
-    BMI SMART CALCULATOR
-</h2>
 </script>
 
 </body>
