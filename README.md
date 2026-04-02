@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BMI Calculator</title>
+<title>BMI Calculator (Feet & Inches)</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -24,11 +24,12 @@
 
   input[type="number"] {
     padding: 10px;
-    margin: 10px 0;
-    width: 100%;
+    margin: 10px 5px;
+    width: 80px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    text-align: center;
   }
 
   button {
@@ -61,8 +62,11 @@
 
 <div class="calculator">
   <h2>BMI Calculator</h2>
+  <div>
+    <input type="number" id="feet" placeholder="Feet">
+    <input type="number" id="inches" placeholder="Inches">
+  </div>
   <input type="number" id="weight" placeholder="Weight (kg)">
-  <input type="number" id="height" placeholder="Height (cm)">
   <button onclick="calculateBMI()">Calculate</button>
 
   <div class="result">
@@ -74,30 +78,34 @@
 <script>
 function calculateBMI() {
   const weight = parseFloat(document.getElementById('weight').value);
-  const height = parseFloat(document.getElementById('height').value) / 100;
+  const feet = parseFloat(document.getElementById('feet').value);
+  const inches = parseFloat(document.getElementById('inches').value);
 
-  if(!weight || !height) {
+  if(!weight || !feet || inches < 0) {
     alert('Please enter valid numbers');
     return;
   }
 
-  const bmi = weight / (height * height);
+  // Convert feet + inches to meters
+  const heightMeters = ((feet * 12) + inches) * 0.0254;
+
+  const bmi = weight / (heightMeters * heightMeters);
   const statusEl = document.getElementById('status');
   let status = '';
   let color = '';
 
   if(bmi < 18.5) {
     status = 'Under Weight';
-    color = '#3498db'; // নীল
+    color = '#3498db';
   } else if(bmi >= 18.5 && bmi < 25) {
     status = 'Normal Weight';
-    color = '#2ecc71'; // সবুজ
+    color = '#2ecc71';
   } else if(bmi >= 25 && bmi < 30) {
     status = 'Over Weight';
-    color = '#e67e22'; // কমলা
+    color = '#e67e22';
   } else {
     status = 'Obese';
-    color = '#e74c3c'; // লাল
+    color = '#e74c3c';
   }
 
   statusEl.innerText = status;
