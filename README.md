@@ -48,6 +48,31 @@ button {
   font-weight: bold;
   white-space: pre-line;
 }
+
+/* Premium Developer Text */
+.developer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #777;
+  letter-spacing: 0.5px;
+}
+
+.developer span {
+  font-weight: bold;
+  color: #007BFF;
+  position: relative;
+}
+
+.developer span::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #007BFF;
+  margin-top: 3px;
+  border-radius: 2px;
+  opacity: 0.6;
+}
 </style>
 </head>
 
@@ -66,6 +91,11 @@ button {
   <button onclick="calculateBMI()">Calculate</button>
 
   <div id="status"></div>
+
+  <!-- Premium Developer Text -->
+  <div class="developer">
+    Developed by <span>Snk Tech Arman</span> • 4SigBn
+  </div>
 </div>
 
 <script>
@@ -80,7 +110,6 @@ function calculateBMI() {
     return;
   }
 
-  // বয়স হিসাব
   const parts = birthdayInput.split('/');
   if(parts.length !== 3) {
     alert('Use DD/MM/YYYY format');
@@ -114,10 +143,8 @@ function calculateBMI() {
 
   const ageStr = years + " years, " + months + " months";
 
-  // Height → meter
   const heightMeters = ((feet * 12) + inches) * 0.0254;
 
-  // BMI
   const bmi = weight / (heightMeters * heightMeters);
   const bmiRounded = bmi.toFixed(1);
 
