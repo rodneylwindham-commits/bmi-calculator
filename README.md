@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -31,7 +31,7 @@ body {
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
-  background: #fff8dc;
+  background: #C9A227;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
