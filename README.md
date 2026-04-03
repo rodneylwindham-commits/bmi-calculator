@@ -169,12 +169,6 @@ let resultBox = document.getElementById("result");
 resultBox.innerText = output;
 resultBox.style.color = color;
 }
-.footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #000; /* black color */
-  opacity: 0.7;
-}
+<div class="footer">Developed By Snk Technician Arman</div>
 </script></body>
 
