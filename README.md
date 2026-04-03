@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tactical BMI System</title><style>
 body {
-  background: #ffffff; /* changed to white */
+  background: #ffffff;
   font-family: "Courier New", monospace;
   color: #007BFF;
   padding: 20px;
@@ -25,17 +25,14 @@ body {
   font-size: 20px;
   font-weight: bold;
   padding: 10px;
-  border: 2px solid #006400; /* dark green */
+  border: 2px solid #006400;
   margin-bottom: 20px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: #e6ffe6;
 }
 
-label {
-  display: block;
-  margin-top: 12px;
-}
+label { display: block; margin-top: 12px; }
 
 input, select {
   width: 100%;
@@ -47,10 +44,7 @@ input, select {
   font-family: inherit;
 }
 
-/* Combined weight input */
-.weight-box {
-  position: relative;
-}
+.weight-box { position: relative; }
 
 .weight-box select {
   position: absolute;
@@ -61,9 +55,7 @@ input, select {
   border-left: 1px solid #007BFF;
 }
 
-.weight-box input {
-  padding-right: 85px;
-}
+.weight-box input { padding-right: 85px; }
 
 button {
   width: 100%;
@@ -74,11 +66,6 @@ button {
   border: none;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #00cc7a;
 }
 
 .result {
@@ -89,15 +76,9 @@ button:hover {
   white-space: pre-line;
   font-weight: bold;
 }
-
-.footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #007BFF;
-  opacity: 0.7;
-}
-</style></head><body><div class="calculator"><div class="title-box">BMI CALCULATOR</div><label>DOB</label> <input id="dob" placeholder="DD/MM/YYYY">
+</style></head><body>
+<div class="calculator">
+<div class="title-box">BMI CALCULATOR</div><label>DOB</label> <input id="dob" placeholder="DD/MM/YYYY">
 
 <label>Gender</label> <select id="gender">
 
@@ -115,49 +96,78 @@ button:hover {
 
 <button onclick="calculateBMI()">RUN ANALYSIS</button>
 
-<div id="result" class="result"></div></div><div class="footer">Developed By Snk Technician Arman</div><script>
-function calculateBMI(){
+<div id="result" class="result"></div>
+</div><script>
+function getAge(dob){
+  let parts = dob.split("/");
+  if(parts.length !== 3) return null;
+  let d = new Date(parts[2], parts[1]-1, parts[0]);
+  let diff = Date.now() - d.getTime();
+  return new Date(diff).getUTCFullYear() - 1970;
+}
 
+function calculateBMI(){
 let w = parseFloat(document.getElementById("weight").value);
 let unit = document.getElementById("unit").value;
 let f = parseFloat(document.getElementById("heightFeet").value);
 let i = parseFloat(document.getElementById("heightInch").value);
+let dob = document.getElementById("dob").value;
+let gender = document.getElementById("gender").value;
 
-if(!w || !f || !i){
+if(!w || !f || i===null){
 document.getElementById("result").innerHTML="INPUT ERROR";
+return;
+}
+
+let age = getAge(dob);
+if(!age){
+document.getElementById("result").innerHTML="INVALID DOB";
 return;
 }
 
 let kg = unit=="lb" ? w*0.453592 : w;
 let h = (f*12+i)*0.0254;
-let bmi = kg/(h*h);
-bmi = bmi.toFixed(1);
+let bmi = (kg/(h*h)).toFixed(1);
 
-let min = 18.5*h*h;
-let max = 24.9*h*h;
+let minBMI = 18.5;
+let maxBMI = 24.9;
+
+// Gender adjustment
+if(gender === "female"){
+  minBMI = 18;
+  maxBMI = 24;
+}
+
+// Age adjustment
+if(age < 18){
+  minBMI = 17;
+  maxBMI = 23;
+}
+
+let minWeight = minBMI * h * h;
+let maxWeight = maxBMI * h * h;
 
 let output="";
 let color="";
 
-if(bmi<18.5){
-let need = min-kg;
-output = `STATUS: UNDERWEIGHT\nBMI: ${bmi}\nREQUIRED: +${need.toFixed(1)} kg (${(need*2.205).toFixed(1)} lb)\nACTION: INCREASE CALORIE INTAKE`;
-color = "#e6b800"; // yellow
+if(bmi < minBMI){
+let need = minWeight - kg;
+output = `STATUS: UNDERWEIGHT\nBMI: ${bmi}\nNEED: +${need.toFixed(1)} kg (${(need*2.205).toFixed(1)} lb)\nAGE: ${age}\nACTION: INCREASE CALORIE INTAKE & STRENGTH TRAINING`;
+color = "#e6b800";
 }
-else if(bmi<=24.9){
-output = `STATUS: NORMAL\nBMI: ${bmi}\nACTION: MAINTAIN CURRENT CONDITION`;
+else if(bmi <= maxBMI){
+output = `STATUS: NORMAL\nBMI: ${bmi}\nAGE: ${age}\nCONDITION: GOOD\nACTION: MAINTAIN DIET & FITNESS`;
 color = "green";
 }
 else{
-let extra = kg-max;
-output = `STATUS: OVERWEIGHT\nBMI: ${bmi}\nEXCESS: ${extra.toFixed(1)} kg (${(extra*2.205).toFixed(1)} lb)\nACTION: INITIATE TRAINING`;
+let extra = kg - maxWeight;
+output = `STATUS: OVERWEIGHT\nBMI: ${bmi}\nEXCESS: ${extra.toFixed(1)} kg (${(extra*2.205).toFixed(1)} lb)\nAGE: ${age}\nACTION: FAT LOSS + CARDIO TRAINING`;
 color = "red";
 }
 
 let resultBox = document.getElementById("result");
 resultBox.innerText = output;
 resultBox.style.color = color;
-
 }
 </script></body>
 </html>
