@@ -98,7 +98,6 @@ button:hover {
 <div class="title-box">BMI CALCULATOR</div>
 
 <label>DOB</label>
-<input id="dob">
 <input id="dob" placeholder="DD/MM/YYYY">
 
 <label>Weight</label>
