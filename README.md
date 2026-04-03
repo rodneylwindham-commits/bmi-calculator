@@ -99,6 +99,7 @@ button:hover {
 
 <label>DOB</label>
 <input id="dob">
+<input id="dob" placeholder="DD/MM/YYYY">
 
 <label>Weight</label>
 <input id="weight" type="number">
