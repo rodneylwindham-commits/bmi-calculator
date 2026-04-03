@@ -9,7 +9,7 @@
 body {
   background: #0a0f0a;
   font-family: "Courier New", monospace;
-  color: #00ff9c;
+  color: #007BFF;
   padding: 20px;
 }
 
@@ -20,8 +20,8 @@ body {
   background: #020402;
   padding: 25px;
   border-radius: 10px;
-  border: 2px solid #00ff9c;
-  box-shadow: 0 0 20px #00ff9c44;
+  border: 2px solid #007BFF;
+  box-shadow: 0 0 20px #007BFF44;
 }
 
 /* Title */
@@ -30,7 +30,7 @@ body {
   font-size: 20px;
   font-weight: bold;
   padding: 10px;
-  border: 2px solid #00ff9c;
+  border: 2px solid #007BFF;
   margin-bottom: 20px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -49,8 +49,8 @@ input, select {
   padding: 10px;
   margin-top: 5px;
   background: #000;
-  color: #00ff9c;
-  border: 1px solid #00ff9c;
+  color: #007BFF;
+  border: 1px solid #007BFF;
   font-family: inherit;
 }
 
@@ -59,7 +59,7 @@ button {
   width: 100%;
   padding: 12px;
   margin-top: 20px;
-  background: #00ff9c;
+  background: #007BFF;
   color: #000;
   border: none;
   font-weight: bold;
@@ -75,7 +75,7 @@ button:hover {
 .result {
   margin-top: 20px;
   padding: 15px;
-  border: 1px solid #00ff9c;
+  border: 1px solid #007BFF;
   text-align: center;
   white-space: pre-line;
 }
@@ -85,7 +85,7 @@ button:hover {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
-  color: #00ff9c;
+  color: #007BFF;
   opacity: 0.7;
 }
 </style>
@@ -101,12 +101,15 @@ button:hover {
 <input id="dob" placeholder="DD/MM/YYYY">
 
 <label>Weight</label>
-<input id="weight" type="number">
 
-<select id="unit">
-<option value="kg">KG</option>
-<option value="lb">POUND</option>
-</select>
+<div class="input-box">
+    <input type="number" id="weight" placeholder="Enter weight">
+    
+    <select id="unit">
+        <option value="kg">KG</option>
+        <option value="lb">LB</option>
+    </select>
+</div>
 
 <label>Height</label>
 <input id="heightFeet" placeholder="Feet">
