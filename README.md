@@ -1,127 +1,73 @@
+<script>
+function calculateBMI() {
 
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BMI Smart Calculator</title>
+let dob = document.getElementById("dob").value.trim();
+let gender = document.getElementById("gender").value;
+let weight = parseFloat(document.getElementById("weight").value);
+let unit = document.getElementById("unit").value;
+let feet = parseFloat(document.getElementById("heightFeet").value);
+let inch = parseFloat(document.getElementById("heightInch").value);
 
-<style>
-body { 
-  font-family: Arial, sans-serif; 
-  background: #f4f4f4; 
-  padding: 20px; 
+if(!dob || !weight || !feet || !inch){
+document.getElementById("result").innerHTML="Please fill all fields.";
+document.getElementById("result").style.backgroundColor="#555";
+return;
 }
 
-.calculator { 
-  max-width: 450px; 
-  margin: auto; 
-  background: #fff; 
-  padding: 25px; 
-  border-radius: 12px; 
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+// convert pound → kg
+let weightKg = (unit === "lb") ? weight * 0.453592 : weight;
+
+// height meter
+let height = (feet*12 + inch)*0.0254;
+
+// BMI
+let bmi = weightKg / (height*height);
+bmi = Math.round(bmi * 100) / 100;
+
+// ideal weight range
+let minWeight = 18.5 * height * height;
+let maxWeight = 24.9 * height * height;
+
+let category = "";
+let advice = "";
+let color = "";
+let diffText = "";
+
+// Adult condition only (same as before)
+if(bmi < 18.5){
+category="Underweight";
+advice="You should eat nutritious food to gain healthy weight.";
+let need = (minWeight - weightKg);
+diffText = `You need +${need.toFixed(1)} kg (${(need*2.205).toFixed(1)} lb)`;
+color="#2196F3";
+}
+else if(bmi <= 24.9){
+category="Normal weight";
+advice="Maintain your current weight and healthy lifestyle.";
+color="#4CAF50";
+}
+else if(bmi < 29.9){
+category="Overweight";
+advice="You are overweight. Consider controlling your diet and exercising.";
+let extra = (weightKg - maxWeight);
+diffText = `You have +${extra.toFixed(1)} kg (${(extra*2.205).toFixed(1)} lb) extra`;
+color="#FF5722";
+}
+else{
+category="Obese";
+advice="You are obese. Seek medical advice and follow a healthy diet plan.";
+let extra = (weightKg - maxWeight);
+diffText = `You have +${extra.toFixed(1)} kg (${(extra*2.205).toFixed(1)} lb) extra`;
+color="#F44336";
 }
 
-/* 🔥 Premium Title */
-.title-box {
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  color: #111;
-  border: 2px solid gold;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  background: #C9A227;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+document.getElementById("result").innerHTML =
+`BMI: ${bmi} (${category})<br>${diffText}<br>${advice}`;
+
+document.getElementById("result").style.backgroundColor = color;
+
 }
-
-label { 
-  display: block; 
-  margin-top: 12px; 
-  font-weight: bold; 
-}
-
-input, select { 
-  width: 100%; 
-  padding: 10px; 
-  margin-top: 5px; 
-  border-radius: 5px; 
-  border: 1px solid #ccc; 
-  box-sizing: border-box; 
-}
-
-/* 💧 Glossy Button */
-button { 
-  width: 100%; 
-  padding: 12px; 
-  background: linear-gradient(to bottom, #4da6ff, #0066cc);
-  color: #fff; 
-  border: none; 
-  border-radius: 8px; 
-  cursor: pointer; 
-  font-size: 16px; 
-  margin-top: 20px; 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: 0.3s;
-}
-
-button:hover { 
-  background: linear-gradient(to bottom, #66b3ff, #0052a3);
-}
-
-.result { 
-  margin-top: 20px; 
-  padding: 15px; 
-  border-radius: 8px; 
-  text-align: center; 
-  font-weight: bold; 
-  line-height: 1.5; 
-  color: #fff; 
-}
-
-/* 🌈 Developer Gradient Text */
-.footer { 
-  text-align: center; 
-  margin-top: 30px; 
-  font-size: 16px; 
-  font-weight: bold; 
-  background: linear-gradient(90deg, #000, #aaa, #000);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-</style>
-</head>
-
-<body>
-
-<div class="calculator">
-    
-    <h2 class="title-box">BMI Smart Calculator</h2>
-    
-    <label>Date of Birth (DD/MM/YYYY)</label>
-    <input type="text" id="dob" placeholder="e.g., 20/06/2015">
-
-    <label>Gender</label>
-    <select id="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-    </select>
-
-    <label>Weight (kg)</label>
-    <input type="number" id="weight" placeholder="e.g., 30">
-
-    <label>Height</label>
-    <div style="display:flex; gap:10px;">
-        <input type="number" id="heightFeet" placeholder="Feet" style="flex:1;">
-        <input type="number" id="heightInch" placeholder="Inches" style="flex:1;">
-    </div>
-    
-    <button onclick="calculateBMI()">Calculate BMI</button>
-    
-    <div class="result" id="result"></div>
-</div>
-
-<div class="footer">
+</script><div class="footer">
   Developed By Snk Technician Arman
 </div>
 
