@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!Bangladesh Army Weight Calculator>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -95,7 +95,7 @@ button:hover {
 
 <div class="calculator">
 
-<div class="title-box">TACTICAL BMI SYSTEM</div>
+<div class="title-box">BMI CALCULATOR</div>
 
 <label>DOB</label>
 <input id="dob">
