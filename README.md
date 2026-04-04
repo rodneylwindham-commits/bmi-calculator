@@ -94,8 +94,8 @@ Army Standard Weight Calculator
 
 <div class="container">
 
-<label>Date of Birth (dd/mm/yyyy)</label>
-<input type="text" id="dob" placeholder="dd/mm/yyyy">
+<label>Date of Birth (DD/MM/YYYY)</label>
+<input type="text" id="dob" placeholder="DD/MM/YYYY">
 
 <label>Weight</label>
 <input type="number" id="weight" placeholder="Enter weight">
