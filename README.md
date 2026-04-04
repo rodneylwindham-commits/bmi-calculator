@@ -266,3 +266,11 @@ ${ageText}
 
 </body>
 </html>
+
+
+
+Note:
+a. A maximum of 20 pounds weight waiver may be allowed for athletes such as wrestlers, boxers, throwers, or any other classified personnel (certified by the Commanding Officer or equivalent of the unit).
+b. All measurements will be taken in uniform, and 7 pounds will be deducted to determine the actual body weight. Personnel below the minimum weight (underweight) will be subject to medical evaluation.
+c. If an individual remains within the normal weight range but has a waist-hip ratio exceeding 1.0, the person will be considered obese and should undergo a special program.
+d. In exceptional cases, a special medical board may be convened by the appropriate medical authority. The board will consider body frame size, waist-hip ratio, percentage of body fat, and overall physical performance before declaring the individual fit.
