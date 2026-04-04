@@ -1,218 +1,247 @@
-Bangladesh Army BMI Calculator 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tactical BMI System</title>
+<title>Army Standard Weight Calculator</title>
 
 <style>
 body {
-  background: #ffffff;
-  font-family: "Courier New", monospace;
-  color: #007BFF;
-  padding: 20px;
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #013220, #6fbf73);
 }
 
-.calculator {
-  max-width: 450px;
-  margin: auto;
-  background: #f9f9f9;
-  padding: 25px;
-  border-radius: 10px;
-  border: 2px solid #007BFF;
-  box-shadow: 0 0 20px #007BFF44;
+/* Header */
+.header {
+    text-align: center;
+    padding: 15px;
+    border: 3px solid black;
+    background: #014421;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-.title-box {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 10px;
-  border: 2px solid #006400;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: #e6ffe6;
+/* Container */
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
 }
 
-label { display: block; margin-top: 12px; }
+/* Inputs */
+label {
+    color: white;
+    font-weight: bold;
+}
 
 input, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  background: #fff;
-  color: #007BFF;
-  border: 1px solid #007BFF;
-  font-family: inherit;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border-radius: 6px;
+    border: none;
+    background: white;
+    color: black;
 }
 
-.weight-box { position: relative; }
-
-.weight-box select {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 80px;
-  border-left: 1px solid #007BFF;
+/* Height */
+.height-box {
+    display: flex;
+    gap: 10px;
 }
 
-.weight-box input { padding-right: 85px; }
-
+/* Button */
 button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 20px;
-  background: #007BFF;
-  color: #000;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
+    width: 100%;
+    padding: 12px;
+    background: #003366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
+button:hover {
+    background: #0055aa;
+}
+
+/* Result */
 .result {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #007BFF;
-  text-align: center;
-  white-space: pre-line;
-  font-weight: bold;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
 }
 
+/* Footer */
 .footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #000;
-  opacity: 0.7;
+    text-align: center;
+    padding: 15px;
+    color: black;
+    font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="calculator">
-  <div class="title-box">BMI CALCULATOR</div>
-
-  <label>DOB</label>
-  <input id="dob" placeholder="DD/MM/YYYY">
-
-  <label>Gender</label>
-  <select id="gender">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </select>
-
-  <label>Weight</label>
-  <div class="weight-box">
-    <input type="number" id="weight" placeholder="Enter weight">
-    <select id="unit">
-      <option value="kg">KG</option>
-      <option value="lb">LB</option>
-    </select>
-  </div>
-
-  <label>Height</label>
-  <input id="heightFeet" placeholder="Feet">
-  <input id="heightInch" placeholder="Inch">
-
-  <button onclick="calculateBMI()">RUN ANALYSIS</button>
-
-  <div id="result" class="result"></div>
+<div class="header">
+Army Standard Weight Calculator
 </div>
 
-<div class="footer">Developed By Snk Technician Arman</div>
+<div class="container">
+
+<label>Date of Birth (dd/mm/yyyy)</label>
+<input type="text" id="dob" placeholder="dd/mm/yyyy">
+
+<label>Weight</label>
+<input type="number" id="weight" placeholder="Enter weight">
+<select id="unit">
+    <option value="kg">KG</option>
+    <option value="lb">Pound</option>
+</select>
+
+<label>Height</label>
+<div class="height-box">
+    <input type="number" id="feet" placeholder="Feet">
+    <input type="number" id="inch" placeholder="Inch">
+</div>
+
+<label>Gender</label>
+<select>
+    <option>Male</option>
+    <option>Female</option>
+</select>
+
+<button onclick="calculate()">Calculate</button>
+
+<div id="result" class="result"></div>
+
+</div>
+
+<div class="footer">
+Developed By Snk Technician Arman
+</div>
 
 <script>
-function getAge(dob){
-  let parts = dob.split("/");
-  if(parts.length !== 3) return null;
-  let d = new Date(parts[2], parts[1]-1, parts[0]);
-  let diff = Date.now() - d.getTime();
-  return new Date(diff).getUTCFullYear() - 1970;
+
+// MIN weight
+const minW = {
+"5-2":47,"5-3":49,"5-4":50,"5-5":52,"5-6":53,"5-7":55,
+"5-8":57,"5-9":58,"5-10":60,"5-11":62,
+"6-0":64,"6-1":65,"6-2":67
+};
+
+// MAX weight
+const maxW = {
+u30:{
+"5-2":62,"5-3":64,"5-4":66,"5-5":68,"5-6":70,"5-7":72,
+"5-8":75,"5-9":77,"5-10":79,"5-11":81,
+"6-0":84,"6-1":86,"6-2":88
+},
+a31:{
+"5-2":66,"5-3":68,"5-4":70,"5-5":72,"5-6":74,"5-7":77,
+"5-8":79,"5-9":81,"5-10":84,"5-11":86,
+"6-0":89,"6-1":91,"6-2":94
+},
+a41:{
+"5-2":67,"5-3":69,"5-4":71,"5-5":74,"5-6":76,"5-7":78,
+"5-8":81,"5-9":83,"5-10":85,"5-11":88,
+"6-0":90,"6-1":93,"6-2":95
+},
+a50:{
+"5-2":68,"5-3":70,"5-4":73,"5-5":75,"5-6":77,"5-7":80,
+"5-8":82,"5-9":84,"5-10":87,"5-11":89,
+"6-0":92,"6-1":95,"6-2":97
+}
+};
+
+// AGE
+function getAge(d){
+let p = d.split("/");
+if(p.length!==3) return null;
+let b = new Date(p[2],p[1]-1,p[0]);
+let t = new Date();
+let age = t.getFullYear()-b.getFullYear();
+return age;
 }
 
-function calculateBMI(){
-
-let w = parseFloat(document.getElementById("weight").value);
-let unit = document.getElementById("unit").value;
-let f = parseFloat(document.getElementById("heightFeet").value);
-let i = parseFloat(document.getElementById("heightInch").value);
-
-if(isNaN(i)) i = 0;
+function calculate(){
 
 let dob = document.getElementById("dob").value;
-let gender = document.getElementById("gender").value;
+let w = parseFloat(document.getElementById("weight").value);
+let unit = document.getElementById("unit").value;
+let f = document.getElementById("feet").value;
+let i = document.getElementById("inch").value;
+let res = document.getElementById("result");
 
-if(!w || !f){
-document.getElementById("result").innerText = "INPUT ERROR";
+// validation
+if(!dob || !w || !f){
+res.innerHTML="সব তথ্য সঠিকভাবে দিন!";
+res.style.background="orange";
+return;
+}
+
+// convert lb → kg
+if(unit==="lb") w = w/2.20462;
+
+let key = f+"-"+i;
+
+if(!minW[key]){
+res.innerHTML="এই height সাপোর্টেড না!";
+res.style.background="orange";
 return;
 }
 
 let age = getAge(dob);
-if(!age){
-document.getElementById("result").innerText = "INVALID DOB";
+if(age===null){
+res.innerHTML="DOB ভুল!";
+res.style.background="orange";
 return;
 }
 
-let kg = unit == "lb" ? w * 0.453592 : w;
-let h = (f * 12 + i) * 0.0254;
+let min = minW[key];
+let max;
 
-let bmi = kg / (h * h);
-bmi = bmi.toFixed(1);
+if(age<=30) max = maxW.u30[key];
+else if(age<=40) max = maxW.a31[key];
+else if(age<=50) max = maxW.a41[key];
+else max = maxW.a50[key];
 
-let minBMI = 18.5;
-let maxBMI = 24.9;
-
-if(gender === "female"){
-  minBMI = 18;
-  maxBMI = 24;
+// UNDER
+if(w < min){
+res.style.background="yellow";
+res.style.color="black";
+res.innerHTML="Under Weight ⚠️<br>পুষ্টিকর খাবার খান";
 }
 
-if(age < 18){
-  minBMI = 17;
-  maxBMI = 23;
+// OVER
+else if(w > max){
+let diff = (w-max).toFixed(2);
+let lb = (diff*2.20462).toFixed(2);
+
+res.style.background="red";
+res.style.color="white";
+res.innerHTML=`
+Over Weight ❌<br>
+Extra: ${diff} KG (${lb} LB)<br>
+খাওয়া কমান + এক্সারসাইজ করুন
+`;
 }
 
-let minWeight = minBMI * h * h;
-let maxWeight = maxBMI * h * h;
-
-let output = "";
-let color = "";
-
-if(bmi < minBMI){
-let need = minWeight - kg;
-output = `STATUS: UNDERWEIGHT
-BMI: ${bmi}
-NEED: +${need.toFixed(1)} kg (${(need*2.205).toFixed(1)} lb)
-AGE: ${age}
-ACTION: INCREASE CALORIE INTAKE & STRENGTH TRAINING`;
-color = "#e6b800";
-}
-else if(bmi <= maxBMI){
-output = `STATUS: NORMAL
-BMI: ${bmi}
-AGE: ${age}
-CONDITION: GOOD
-ACTION: MAINTAIN FITNESS`;
-color = "green";
-}
+// NORMAL
 else{
-let extra = kg - maxWeight;
-output = `STATUS: OVERWEIGHT
-BMI: ${bmi}
-EXCESS: ${extra.toFixed(1)} kg (${(extra*2.205).toFixed(1)} lb)
-AGE: ${age}
-ACTION: CARDIO + FAT LOSS TRAINING`;
-color = "red";
+res.style.background="green";
+res.style.color="white";
+res.innerHTML="Normal Weight ✅";
 }
 
-let resultBox = document.getElementById("result");
-resultBox.innerText = output;
-resultBox.style.color = color;
-
 }
+
 </script>
 
 </body>
