@@ -11,7 +11,6 @@ body {
     background: linear-gradient(135deg,#013220,#66bb6a);
 }
 
-/* Header */
 .header {
     text-align: center;
     padding: 15px;
@@ -22,7 +21,6 @@ body {
     font-weight: bold;
 }
 
-/* Container */
 .container {
     width: 90%;
     max-width: 500px;
@@ -30,7 +28,6 @@ body {
     padding: 20px;
 }
 
-/* Inputs */
 label {
     color: white;
     font-weight: bold;
@@ -51,7 +48,6 @@ input, select {
     gap: 10px;
 }
 
-/* Button */
 button {
     width: 100%;
     padding: 12px;
@@ -67,7 +63,6 @@ button:hover {
     background: #0055aa;
 }
 
-/* Result */
 .result {
     margin-top: 20px;
     padding: 15px;
@@ -76,7 +71,6 @@ button:hover {
     text-align: center;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     padding: 15px;
@@ -159,7 +153,7 @@ a50:{
 }
 };
 
-// AGE calculation (year, month, day)
+// AGE details
 function getAgeDetails(dob){
 let p = dob.split("/");
 let birth = new Date(p[2],p[1]-1,p[0]);
@@ -184,14 +178,12 @@ let f = document.getElementById("feet").value;
 let i = document.getElementById("inch").value;
 let res = document.getElementById("result");
 
-// validation
 if(!dob || !w || !f){
 res.innerHTML="সব তথ্য দিন!";
 res.style.background="orange";
 return;
 }
 
-// convert to KG
 let weightKg = unit==="lb" ? w/2.20462 : w;
 
 let key = f+"-"+i;
@@ -202,11 +194,9 @@ res.style.background="orange";
 return;
 }
 
-// age
 let age = getAgeDetails(dob);
 let years = age.y;
 
-// select max
 let max;
 if(years<=30) max = maxW.u30[key];
 else if(years<=40) max = maxW.a31[key];
@@ -215,13 +205,16 @@ else max = maxW.a50[key];
 
 let min = minW[key];
 
+// max limit text
+let maxLb = (max*2.20462).toFixed(2);
+let maxText = `Max Limit: ${max} KG (${maxLb} LB)`;
+
 // age text
 let ageText = `Age: ${age.y} বছর ${age.m} মাস ${age.d} দিন`;
 
 // UNDER
 if(weightKg < min){
-
-let diff = (min - weightKg).toFixed(2);
+let diff = (min-weightKg).toFixed(2);
 let lb = (diff*2.20462).toFixed(2);
 
 res.style.background="yellow";
@@ -229,6 +222,7 @@ res.style.color="black";
 res.innerHTML=`
 Under Weight ⚠️<br>
 কম আছে: ${diff} KG (${lb} LB)<br>
+${maxText}<br>
 পুষ্টিকর খাবার খান<br><br>
 ${ageText}
 `;
@@ -236,8 +230,7 @@ ${ageText}
 
 // OVER
 else if(weightKg > max){
-
-let diff = (weightKg - max).toFixed(2);
+let diff = (weightKg-max).toFixed(2);
 let lb = (diff*2.20462).toFixed(2);
 
 res.style.background="red";
@@ -245,6 +238,7 @@ res.style.color="white";
 res.innerHTML=`
 Over Weight ❌<br>
 বেশি আছে: ${diff} KG (${lb} LB)<br>
+${maxText}<br>
 খাওয়া কমান + এক্সারসাইজ করুন<br><br>
 ${ageText}
 `;
@@ -255,7 +249,8 @@ else{
 res.style.background="green";
 res.style.color="white";
 res.innerHTML=`
-Normal Weight ✅<br><br>
+Normal Weight ✅<br>
+${maxText}<br><br>
 ${ageText}
 `;
 }
@@ -266,8 +261,6 @@ ${ageText}
 
 </body>
 </html>
-
-
 
 
 Note:
